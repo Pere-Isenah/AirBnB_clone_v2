@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
+#script that sets up your web servers for the deployment of web_static
 
 # Install 
 if command -v nginx >/dev/null 2>&1; then
     echo "Nginx is installed."
-    
+
 else
     echo "installing Nginx."
     sudo apt-get -y update
