@@ -1,77 +1,26 @@
-#!/usr/bin/env bash
+#!/usr/bin/python3
 
-# Install 
-if command -v nginx >/dev/null 2>&1; then
-    echo "Nginx is installed."
-else
-    echo "installing Nginx."
-    sudo apt-get -y update
-    sudo apt-get install -y nginx
-fi
+from fabric.api import local
+import datetime
+import os
 
 
+current_datetime = datetime.datetime.now()
 
-# configure nginx to listen on port 80
-ufw allow 'Nginx HTTP'
-
-# set paths
-data_test_path="/data/web_static/releases/test/"
-data_shared_path="/data/web_static/shared/"
-data_current_path="/data/web_static/current"
-
-#create a data folder
-if [ -e "$data_test_path" ]; then
-    echo "$data_test_path exist."
-else
-    sudo mkdir -p "$data_test_path"
-    sudo touch "$data_test_path/index.html"
-    
-
-    printf %s "<html>
-    <head>
-    </head>
-    <body>
-        Holberton School
-    </body>
-</html>" > "$data_test_path/index.html"
-fi
-
-if [ -d "$data_shared_path" ]; then
-    echo "$data_shared_path exist."
-else
-    sudo mkdir -p "$data_shared_path"
-fi
+year = current_datetime.year
+month = current_datetime.month
+day = current_datetime.day
+hour = current_datetime.hour
+minutes = current_datetime.minute
+seconds = current_datetime.second
 
 
-if [ -L "$data_current_path" ]; then
-    sudo rm "$data_current_path"
-    sudo mkdir -p "$data_current_path"
-    ln -s "$data_test_path/index.html" "$data_current_path" 
-else
-    sudo mkdir -p "$data_current_path"
-    sudo ln -s "$data_test_path/index.html" "$data_current_path" 
-fi
-sudo chown -R ubuntu:ubuntu /data/
+def do_pack():
+    """Create a tar gzipped archive of the directory web_static"""
+    try:
+        if not os.path.isdir("versions"):
+                local("mkdir versions")
 
-#update nginx configuration
-printf %s "server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-    add_header X-Served-By $HOSTNAME;
-    root   /var/www/html;
-    index  index.html;
-    location /hbnb_static {
-        alias /data/web_static/current;
-        index index.html;
-    }
-    location /redirect_me {
-        return 301 http://cuberule.com/;
-    }
-    error_page 404 /404.html;
-    location /404 {
-      root /var/www/html;
-      internal;
-    }
-}" > /etc/nginx/sites-available/default
-
-service nginx restart
+        local(f"tar -czvf versions/web_static_{year}{month}{day}{hour}{minutes}{second}.tgz web_static/*")
+    except Exception:
+        return None
