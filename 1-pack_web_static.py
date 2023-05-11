@@ -8,13 +8,13 @@ from fabric.api import local
 def do_pack():
     """Create a tar gzipped archive of the directory web_static"""
     try:
-        dt = datetime.now()
-        file_name = "versions/web_static_{}{}{}{}{}{}.tgz".format(dt.year,
-                                                                  dt.month,
-                                                                  dt.day,
-                                                                  dt.hour,
-                                                                  dt.minute,
-                                                                  dt.second)
+        cdt = datetime.now()
+        file_name = "versions/web_static_{}{}{}{}{}{}.tgz".format(cdt.year,
+                                                                  cdt.month,
+                                                                  cdt.day,
+                                                                  cdt.hour,
+                                                                  cdt.minute,
+                                                                  cdt.second)
         if not os.path.isdir("versions"):
             local("mkdir versions")
 
