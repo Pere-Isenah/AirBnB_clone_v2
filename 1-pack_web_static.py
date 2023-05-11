@@ -13,6 +13,7 @@ day = current_datetime.day
 hour = current_datetime.hour
 minutes = current_datetime.minute
 seconds = current_datetime.second
+file_name = "versions/web_static_{year}{month}{day}{hour}{minutes}{second}.tgz"
 
 
 def do_pack():
@@ -21,6 +22,7 @@ def do_pack():
         if not os.path.isdir("versions"):
                 local("mkdir versions")
 
-        local(f"tar -czvf versions/web_static_{year}{month}{day}{hour}{minutes}{second}.tgz web_static/*")
+        local(f"tar -cvzf {file_name}  web_static/*")
+        return file_name
     except Exception:
         return None
