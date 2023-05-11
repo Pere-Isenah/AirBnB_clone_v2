@@ -1,28 +1,24 @@
 #!/usr/bin/python3
-
-from fabric.api import local
-import datetime
+"""Generates a .tgz archive from the contents of web_static using fabric"""
 import os
-
-
-current_datetime = datetime.datetime.now()
-
-year = current_datetime.year
-month = current_datetime.month
-day = current_datetime.day
-hour = current_datetime.hour
-minutes = current_datetime.minute
-seconds = current_datetime.second
-file_name = "versions/web_static_{year}{month}{day}{hour}{minutes}{second}.tgz"
+from datetime import datetime
+from fabric.api import local
 
 
 def do_pack():
     """Create a tar gzipped archive of the directory web_static"""
     try:
+        dt = datetime.now()
+        file_name = "versions/web_static_{}{}{}{}{}{}.tgz".format(dt.year,
+                                                                  dt.month,
+                                                                  dt.day,
+                                                                  dt.hour,
+                                                                  dt.minute,
+                                                                  dt.second)
         if not os.path.isdir("versions"):
-                local("mkdir versions")
+            local("mkdir versions")
 
-        local(f"tar -cvzf {file_name}  web_static/*")
+        local("tar -cvzf {} web_static/*".format(file_name))
         return file_name
     except Exception:
         return None
