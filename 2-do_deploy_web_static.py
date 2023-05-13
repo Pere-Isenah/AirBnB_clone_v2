@@ -3,8 +3,18 @@
 import os
 from datetime import datetime
 from fabric.api import *
+import sys
 
-env.hosts = ["52.91.123.230", "54.166.128.87"]
+user = os.getenv("SVR_USER")
+key = os.getenv("SSH_key")
+host_1 = os.getenv("WEB01_HOST")
+host_2 = os.getenv("WEB02_HOST")
+env.hosts = [host_1, host_2]
+env.key_filename = key
+env.user = user
+archive_path = sys.argv[3][10:]
+
+print(env.hosts)
 
 def do_pack():
     """Create a tar gzipped archive of the directory web_static"""
@@ -37,10 +47,11 @@ def do_deploy(archive_path):
         # /data/web_static/releases/<archive filename without extension>
         # on the web server
         filename = os.path.basename(archive_path)
+    
         fname = filename.split('.')[0]
         folder_name = '/data/web_static/releases/' + fname
         run('sudo mkdir -p {}'.format(folder_name))
-        run('tar -xzf /tmp/{} -C {}'.format(filename, folder_name))
+        run('sudo tar -xzf /tmp/{} -C {}'.format(filename, folder_name))
 
         # Delete the archive from the web server
         run('sudo rm /tmp/{}'.format(filename))
