@@ -12,6 +12,7 @@ def hello():
 
 @app.route("/hbnb", strict_slashes = False)
 def hbnb():
+    """ Define hbnb page """
     return "HBNB"
 
 if __name__ == "__main__":
