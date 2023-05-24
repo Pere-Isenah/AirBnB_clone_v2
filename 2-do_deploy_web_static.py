@@ -14,7 +14,7 @@ env.key_filename = key
 env.user = user
 archive_path = sys.argv[3][10:]
 
-print(env.hosts)
+
 
 def do_pack():
     """Create a tar gzipped archive of the directory web_static"""
